@@ -1,0 +1,6 @@
+# @name transcribe
+POST   http://localhost:3003/audio/transcription/sN2sGd32lGs
+
+###
+# @name completion
+POST   http://localhost:3003/ai/completion/sN2sGd32lGs
