@@ -7,16 +7,17 @@ import { Stream } from "openai/streaming.mjs";
 import {OpenAIStream, streamToResponse} from "ai"
 
 export async function generateAICompletionRoute(app: FastifyInstance){
-    app.post('/ai/completion/:video_id', async (req, res) => {
+    app.post('/ai/completion', async (req, res) => {
 
         const paramsSchema = z.object({
-            video_id: z.string()
+            
+            audioID: z.string()
         })
-        const {  video_id } = paramsSchema.parse(req.params)
+        const {  audioID } = paramsSchema.parse(req.body)
         console.log('start completion:')
         const video = await prisma.video.findFirstOrThrow({
             where:{
-                videoID: video_id.toString()
+                videoID: audioID.toString()
             }
         }
         )

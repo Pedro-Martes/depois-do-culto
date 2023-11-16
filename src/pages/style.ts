@@ -55,7 +55,7 @@ interface GeneratedAIButtonProps {
     visibility: 'visible' | 'invisible';
 }
 
-export const GeneratedAIButton = styled('form', {
+export const GeneratedAIButton = styled('div', {
     variants: {
         visibility: {
             visible: {

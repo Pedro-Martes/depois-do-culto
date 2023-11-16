@@ -6,6 +6,11 @@ import { setTimeout } from "timers";
 import { useCompletion } from 'ai/react'
 import { Selector } from "@/components/Selector/select";
 
+    import {Player} from '@lottiefiles/react-lottie-player';
+    
+  
+  
+
 type Status = 'baixando' | 'transcrevendo' | 'Gerando' | 'Ocioso' | 'success'
 
 const statusOfProcess: any = {
@@ -24,6 +29,7 @@ export default function Index() {
     const [status, setStatus] = useState<Status>('Ocioso')
     const [resultText, setResultText] = useState<string>('')
     const [promptForm, setPromptForm] = useState<string>('invisible')
+    const temperature = 0.5
 
     const {
         input,
@@ -33,7 +39,15 @@ export default function Index() {
         completion,
         isLoading
     } = useCompletion({
-        api: `http://localhost:3003/ai/completion/${audioID}`
+        api: `http://localhost:3003/ai/completion`,
+        body: {
+            audioID,
+            temperature
+        },
+        headers: {
+            'Content-type': 'application/json'
+        }
+
     })
 
 
@@ -52,7 +66,7 @@ export default function Index() {
 
     async function completionAI() {
         event?.preventDefault()
-        
+
         try {
 
             const response = await api.post(`/ai/completion/${audioID}`)
@@ -81,10 +95,10 @@ export default function Index() {
 
 
             setStatus("baixando")
-              await api.post(`/video/${videoID[1]}`)
-              console.log('transcrevendo')
+            await api.post(`/video/${videoID[1]}`)
+            console.log('transcrevendo')
 
-              await transcribeAudio(videoID[1])
+            await transcribeAudio(videoID[1])
 
             //   await completionAI(videoID[1])
 
@@ -94,7 +108,7 @@ export default function Index() {
         }
 
         setStatus('success')
- 
+
 
     }
 
@@ -129,29 +143,39 @@ export default function Index() {
                         disabled={status != 'Ocioso'}
                     >
                         {
-                            status == 'Ocioso' ? 'Executar' : status
+                        
+                            status == 'Ocioso' ? 'Executar' : (
+                                <Player
+                                autoplay
+                                loop
+                                src="https://assets5.lottiefiles.com/packages/lf20_qh5z2fdq.json"
+                                style={{height: '24px', width: '24px'}}
+                                />
+                            )
                         }
 
                     </Button>
 
                 </InputVideoLink>
 
-                <GeneratedAIButton visibility={promptForm} onSubmit={handleSubmit}>
-                    <Selector  />
-                    <Button disabled={isLoading} type="submit">
-                        Gerar
-                    </Button>
-                </GeneratedAIButton>
+              
+                    <form onSubmit={handleSubmit}>
+                        <Selector />
+                        <Button disabled={isLoading} type="submit">
+                            Gerar
+                        </Button>
+                    </form>
+                
 
                 <ResultContainer>
 
 
                     <Textarea
-                     placeholder="Resultado" 
-                     readOnly 
-                     value={resultText} 
-                    
-                     />
+                        placeholder="Resultado"
+                        readOnly
+                        value={completion}
+
+                    />
 
                 </ResultContainer>
 
