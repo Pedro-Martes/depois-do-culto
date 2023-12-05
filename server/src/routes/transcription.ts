@@ -5,11 +5,8 @@ import { openai } from "../lib/openai";
 import { prisma } from "../lib/prisma";
 
 export async function createTranscriptionRoute(app: FastifyInstance) {
-    app.post('/audio/transcription/:video_id', async (req) => {
-        const paramsSchema = z.object({
-            video_id: z.string()
-        })
-        const { video_id } = paramsSchema.parse(req.params)
+    app.post('/audio/transcription/:video_id', async (req: any) => {
+        const video_id = req.params.video_id as string
         const videoPath = `./tmp/${video_id}.mp3`
         const audioReadStream = createReadStream(videoPath)
 

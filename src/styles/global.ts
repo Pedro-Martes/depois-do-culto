@@ -20,12 +20,18 @@ export const globalStyles = globalCss({
 
 export const Text = styled('h1', {
     fontSize: '2rem',
-    fontWeight: '500'
+    fontWeight: '500',
+     '@media (max-width: 768px)': {
+    fontSize: '1.4rem'
+  },
 })
 
 export const Label = styled('label', {
     fontSize: '0.9rem',
-    color: '$gray-300'
+    color: '$gray-300',
+    '@media (max-width: 768px)': {
+        fontSize: '0.5rem'
+      },
 })
 
 export const Input = styled('input', {
@@ -40,7 +46,7 @@ export const Input = styled('input', {
     '&:disabled':{
         opacity: '.5',
         pointerEvents: 'none',
-        background: '$gray-400'    
+        background: '$gray-700'    
     
     },
     '&:focus':{
@@ -84,10 +90,13 @@ export const Button = styled('button', {
     },
     color: '$gray-800',
     cursor: 'pointer',
-    padding: '0.75rem 2.875rem',
+    padding: '0.75rem',
     border: 'none',
     fontWeight: '600',
     borderRadius: '5px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
 
     fontSize: '1rem',
     transition: '0.3s',
@@ -97,10 +106,13 @@ export const Button = styled('button', {
     '&:disabled':{
         opacity: '.5',
         pointerEvents: 'none',
-        background: '$gray-400',
+        background: '$gray-700',
         cursor: 'wait'  
     
-    }
+    },
+    '@media (max-width: 768px)': {
+        fontSize: '0.7rem'
+      },
 
 
 })

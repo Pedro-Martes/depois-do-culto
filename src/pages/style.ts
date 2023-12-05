@@ -1,9 +1,7 @@
 import { styled } from "@/styles/app";
-import { Button } from "@/styles/global";
 
 export const HomeContainer = styled('div', {
     display: 'flex',
-
     flexDirection: 'column',
     width: '100%',
     gap: '12px',
@@ -14,7 +12,9 @@ export const Header = styled('header', {
     display: 'flex',
     padding: '8px',
     justifyContent: 'space-between',
-    width: '100%'
+    width: '100%',
+   
+
 
 })
 
@@ -23,6 +23,7 @@ export const Poweredby = styled('div', {
     alignItems: 'center',
     flexDirection: 'row',
     gap: '8px',
+    
 
 })
 
@@ -30,7 +31,7 @@ export const Poweredby = styled('div', {
 export const InputVideoLink = styled('form', {
     display: 'flex',
     justifyContent: 'center',
-    padding: '0 12rem',
+    padding: '1rem',
     width: '100%',
     gap: '8px',
     
@@ -41,7 +42,7 @@ export const InputVideoLink = styled('form', {
 export const ResultContainer = styled('div', {
     display: 'flex',
 
-    padding: '0 12rem',
+    padding: '1rem',
     width: '100%',
     height: '100%',
 

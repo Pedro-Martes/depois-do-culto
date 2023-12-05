@@ -5,6 +5,7 @@ import { FormEvent, useRef, useState } from "react";
 import { Selector } from "@/components/Selector/select";
 
 import dynamic from 'next/dynamic';
+import { PaperPlane, PaperPlaneRight } from "phosphor-react";
 
 
 const DynamicPlayer = dynamic(
@@ -67,7 +68,7 @@ export default function Index() {
 
             await transcribeAudio(videoID[1])
 
-            //   await completionAI(videoID[1])
+
 
             setPromptForm('visible')
         } catch (e) {
@@ -91,7 +92,6 @@ export default function Index() {
             setPromptForm('invisible')
 
         } catch (e) {
-
             console.log(e)
 
         }
@@ -131,15 +131,15 @@ export default function Index() {
                     >
                         {
 
-                            status == 'Ocioso' ? 'Executar' :
+                            status == 'Ocioso' ? (<PaperPlaneRight size={15} color="black" />) :
 
 
                                 (status == 'success' ?
                                     <DynamicPlayer
-                                    loop
-                                    autoplay
-                                    src={'https://lottie.host/2c5b46e3-e7b0-4bb2-a52d-5d2b3fb2ded5/TcSraWsBYw.json'}
-                                    style={{ height: '30px', width: '30px' }}
+                                        keepLastFrame
+                                        autoplay
+                                        src={'https://lottie.host/2c5b46e3-e7b0-4bb2-a52d-5d2b3fb2ded5/TcSraWsBYw.json'}
+                                        style={{ height: '30px', width: '30px' }}
                                     />
                                     : <DynamicPlayer
                                         loop
@@ -148,11 +148,6 @@ export default function Index() {
                                         style={{ height: '20px', width: '25px' }}
                                     />
                                 )
-
-
-
-
-
                         }
 
                     </Button>
