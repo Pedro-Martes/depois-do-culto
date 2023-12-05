@@ -7,7 +7,7 @@ import { Stream } from "openai/streaming.mjs";
 import {OpenAIStream, streamToResponse} from "ai"
 
 export async function generateAICompletionRoute(app: FastifyInstance){
-    app.post('/ai/completion', async (req, res) => {
+    app.post('/ai/completion/:audioID', async (req, res) => {
 
         const paramsSchema = z.object({
             

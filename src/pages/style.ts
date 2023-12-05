@@ -51,11 +51,11 @@ export const ResultContainer = styled('div', {
 
 })
 
-interface GeneratedAIButtonProps {
+interface GeneratedAIFormProps {
     visibility: 'visible' | 'invisible';
 }
 
-export const GeneratedAIButton = styled('div', {
+export const GeneratedAIForm = styled('form', {
     variants: {
         visibility: {
             visible: {

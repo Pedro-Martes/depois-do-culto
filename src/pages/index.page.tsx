@@ -1,15 +1,20 @@
 import { Button, Input, Label, Separator, Textarea, Text } from "@/styles/global";
-import { GeneratedAIButton, Header, HomeContainer, InputVideoLink, Poweredby, ResultContainer } from "./style";
+import { GeneratedAIForm, Header, HomeContainer, InputVideoLink, Poweredby, ResultContainer } from "./style";
 import { api } from "@/lib/axios";
 import { FormEvent, useRef, useState } from "react";
-import { setTimeout } from "timers";
-import { useCompletion } from 'ai/react'
 import { Selector } from "@/components/Selector/select";
 
-    import {Player} from '@lottiefiles/react-lottie-player';
-    
-  
-  
+import dynamic from 'next/dynamic';
+
+
+const DynamicPlayer = dynamic(
+    () => import("@lottiefiles/react-lottie-player").then((module) => module.Player),
+    { ssr: false }
+);
+
+
+
+
 
 type Status = 'baixando' | 'transcrevendo' | 'Gerando' | 'Ocioso' | 'success'
 
@@ -29,26 +34,6 @@ export default function Index() {
     const [status, setStatus] = useState<Status>('Ocioso')
     const [resultText, setResultText] = useState<string>('')
     const [promptForm, setPromptForm] = useState<string>('invisible')
-    const temperature = 0.5
-
-    const {
-        input,
-        setInput,
-        handleInputChange,
-        handleSubmit,
-        completion,
-        isLoading
-    } = useCompletion({
-        api: `http://localhost:3003/ai/completion`,
-        body: {
-            audioID,
-            temperature
-        },
-        headers: {
-            'Content-type': 'application/json'
-        }
-
-    })
 
 
     async function transcribeAudio(id: string) {
@@ -61,6 +46,36 @@ export default function Index() {
         } catch (e) {
             console.log(e)
         }
+    }
+    async function handleUploadVideoLink(event: FormEvent<HTMLFormElement>) {
+
+        event?.preventDefault()
+        setResultText("");
+
+        const videoLink = videLinkRef.current?.value
+        const videoID = videoLink!.split('/watch?v=')
+
+
+        if (!videoID[0].includes('youtube')) {
+            return window.alert('Ops! Por favor, insira um link do video do YOUTUBE')
+        }
+
+        try {
+            setStatus("baixando")
+            await api.post(`/video/${videoID[1]}`)
+            console.log('transcrevendo')
+
+            await transcribeAudio(videoID[1])
+
+            //   await completionAI(videoID[1])
+
+            setPromptForm('visible')
+        } catch (e) {
+            console.log(e)
+        }
+
+        setStatus('success')
+
 
     }
 
@@ -83,34 +98,6 @@ export default function Index() {
 
     }
 
-    async function handleUploadVideoLink(event: FormEvent<HTMLFormElement>) {
-
-        event?.preventDefault()
-        setResultText("");
-
-        const videoLink = videLinkRef.current?.value
-        const videoID = videoLink!.split('/watch?v=')
-        setAudioID(videoID[1])
-        try {
-
-
-            setStatus("baixando")
-            await api.post(`/video/${videoID[1]}`)
-            console.log('transcrevendo')
-
-            await transcribeAudio(videoID[1])
-
-            //   await completionAI(videoID[1])
-
-            setPromptForm('visible')
-        } catch (e) {
-            console.log(e)
-        }
-
-        setStatus('success')
-
-
-    }
 
 
     return (
@@ -143,29 +130,45 @@ export default function Index() {
                         disabled={status != 'Ocioso'}
                     >
                         {
-                        
-                            status == 'Ocioso' ? 'Executar' : (
-                                <Player
-                                autoplay
-                                loop
-                                src="https://assets5.lottiefiles.com/packages/lf20_qh5z2fdq.json"
-                                style={{height: '24px', width: '24px'}}
-                                />
-                            )
+
+                            status == 'Ocioso' ? 'Executar' :
+
+
+                                (status == 'success' ?
+                                    <DynamicPlayer
+                                    loop
+                                    autoplay
+                                    src={'https://lottie.host/2c5b46e3-e7b0-4bb2-a52d-5d2b3fb2ded5/TcSraWsBYw.json'}
+                                    style={{ height: '30px', width: '30px' }}
+                                    />
+                                    : <DynamicPlayer
+                                        loop
+                                        autoplay
+                                        src={'https://lottie.host/1b5745fa-b7cf-4d14-af49-8fa4c66f9b29/7afa8IJggh.json'}
+                                        style={{ height: '20px', width: '25px' }}
+                                    />
+                                )
+
+
+
+
+
                         }
 
                     </Button>
 
                 </InputVideoLink>
 
-              
-                    <form onSubmit={handleSubmit}>
-                        <Selector />
-                        <Button disabled={isLoading} type="submit">
-                            Gerar
-                        </Button>
-                    </form>
-                
+
+
+                <GeneratedAIForm onSubmit={completionAI} visibility={promptForm}>
+                    <Selector />
+                    <Button type="submit">
+                        Gerar
+                    </Button>
+                </GeneratedAIForm>
+
+
 
                 <ResultContainer>
 
@@ -173,7 +176,7 @@ export default function Index() {
                     <Textarea
                         placeholder="Resultado"
                         readOnly
-                        value={completion}
+                        value={resultText}
 
                     />
 
